@@ -1,0 +1,93 @@
+{%extends "base.html" %}
+{% block content %}
+	{% if user.is_authenticated %}
+		{% if images %}
+			 {% for image in images %}
+						<div class="image">
+								<div class="date">
+										{{ image.date }}
+								</div>
+								<p><img src="{{ image.link }}"/></p>
+						</div>
+				{% endfor %}
+		{% else %}
+			<p>Здесь должна быть новостная лента изображений</p>
+			<p>Чтобы просматривать изображения, подпишитесь на RSS-канал. </p>
+			<p>Для этого добавьте ссылку на RSS в Вашем <a href="{% url 'user_profile' %}">профиле</a>.</p>
+			<p>Изображения будут добавляться автоматически.</p>
+			<p>Если ссылка добавлена, но Вы не видите изображений, скорее всего, Вы удалили историю новостей.</p>
+		{% endif %}
+	{% else %}
+		<p>Для просмотра и конфигурации Вашей ленты, пожалуйста, <a href="{% url 'auth_login' %}">авторизируйтесь</a>.</p>
+		<p>Также Вы можете воспользоваться формой в навигационной панели, чтобы посмотреть Rss-канал.</p>
+		{% endif %}
+{% endblock content %}
+
+{% block pages %}
+{% if user.is_authenticated %}
+		<p>{% if images.has_previous %}
+			<a href="?{% for key,values in request.GET.lists %}{% ifnotequal key 'page' %}{% for value in values %}{{ key }}={{ value }}&{% endfor %}{% endifnotequal %}{% endfor %}page=1">Первая</a>
+				<a href="?{% for key,values in request.GET.lists %}{% ifnotequal key 'page' %}{% for value in values %}{{ key }}={{ value }}&{% endfor %}{% endifnotequal %}{% endfor %}page={{ images.previous_page_number }}"><<<<</a>
+		{% endif %}
+		{% if images.has_next or images.has_previous %}
+		<span class="current">
+				Страница {{ images.number }} из {{ images.paginator.num_pages }}
+		</span>
+		{% endif %}
+		{% if images.has_next %}
+				<a href="?{% for key,values in request.GET.lists %}{% ifnotequal key 'page' %}{% for value in values %}{{ key }}={{ value }}&{% endfor %}{% endifnotequal %}{% endfor %}page={{ images.next_page_number }}">>>>></a>
+				<a href="?{% for key,values in request.GET.lists %}{% ifnotequal key 'page' %}{% for value in values %}{{ key }}={{ value }}&{% endfor %}{% endifnotequal %}{% endfor %}page={{ images.paginator.num_pages }}">Последняя</a>
+		{% endif %}
+	</p>
+{% endif %}
+{% endblock pages %}
+
+{% block navigation %}
+	<form action="" method="get">
+		<div class="sources">
+			<p><input type="checkbox" name="url" value="all" class="all" onClick="toggle(this)" {% if 'all' in links %} checked {% endif%} />Все каналы
+			{% for source in sources %}
+				<p><input type="checkbox" name="url" class="url" value="{{ source.link }}" onClick="toggle_if_all(this)" {% if source.link in links %} checked {% endif%}/>{{ source.link }}</p>
+			{% endfor %}
+		</div>
+		<input type="submit" name="urlsubmit" value="Выбрать">
+	</form>
+<script>
+function toggle(source) {
+	checkboxes = document.getElementsByName('url');
+	for(var i=0, n=checkboxes.length;i<n;i++) {
+		checkboxes[i].checked = source.checked;
+	}
+	disable = !(document.getElementsByClassName("all")[0].checked);
+	document.getElementsByName('urlsubmit')[0].disabled = disable;
+}
+
+function toggle_if_all(source) {
+	all_checked = 0;
+	disable = true;
+	checkboxes = document.getElementsByClassName("url");
+
+	for(var i=0, n=checkboxes.length;i<n;i++) {
+		if(checkboxes[i].checked != source.checked)
+			if (source.checked){
+				all_checked = 1
+			}
+			else{
+				disable = false;
+			}
+	}
+	if (all_checked == 0){
+		document.getElementsByClassName("all")[0].checked = source.checked;
+	}
+	if (source.checked){
+		document.getElementsByName('urlsubmit')[0].disabled = false;
+	}
+	else{
+		document.getElementsByName('urlsubmit')[0].disabled = disable;
+	}
+
+}
+</script>
+
+
+{% endblock navigation %}	

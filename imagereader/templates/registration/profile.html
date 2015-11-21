@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Аккаунт</h1>
+
+{% if user.is_authenticated %}
+Ваш ник: {{ user.username }} <br>
+<a href="{% url 'auth_logout' %}">Выход</a><br/><br/>
+
+<p><strong>Ваши подписки:</strong></p>
+<div class="profile_sources">
+{% for source in sources %}
+	<div class="profile_source">
+		<a href="{{ source.link }}">{{ source.link }}</a>
+		<form action="delete" method="post">
+			{% csrf_token %}
+			<input type="hidden" name="link" value="{{ source.link }}"> 
+	   		<input type="submit" value="Удалить">
+		</form>
+		<form action="clear" method="post">
+			{% csrf_token %}
+			<input type="hidden" name="link" value="{{ source.link }}"> 
+	   		<input type="submit" value="Очистить историю">
+		</form>
+	</div>
+	<br/>
+	<div class="source_settings">
+		Исключать изображения меньше, чем:
+		<br/>
+		<form action="filter" method="post">
+				{% csrf_token %}
+				<input type="hidden" name="link" value="{{ source.link }}">
+		    	Ширина: <input type="number" name="img_width" min="0" width="1" value="{{ source.min_width }}">
+		    	Высота: <input type="number" name="img_height" min="0" value="{{ source.min_height }}">
+		    	<input type="hidden" name="filter_all" value="false">
+		    	<input type="checkbox" name="filter_all" value="true"><acronym title ="Внимание! Данная операция может занять несколько минут! Не рекомендуется использовать интернет-соединении.">Применить к уже сохраненным</acronym>
+		   		<input type="submit" value="Ок">
+		</form>	
+		<div class="comment">
+			При нулевом значении фильтр будет отключен. Вы можете фильтровать как по двум значениям, так и по одному из них.
+		</div>
+	</div>
+		<br/>
+	
+{% endfor %}
+</div>
+Добавить канал
+	<form action="add" method="post">
+			{% csrf_token %}
+	    	<input type="url" name="url"><br>
+	    	<div class="source_settings">
+	    	Исключать изображения меньше, чем: <br/>
+	    	<input type="hidden" name="link" value="{{ source.link }}">
+		    	Ширина: <input type="number" name="min_width" min="0" width="1" value="0">
+		    	Высота: <input type="number" name="min_height" min="0" value="0">
+		    </div>
+	   		<input type="submit" value="Добавить">
+	   		<div class="comment">
+			При нулевом значении фильтр будет отключен. Вы можете фильтровать как по двум значениям, так и по одному из них.
+		</div>
+	</form>
+{% else %}
+Вы не вошли в систему
+<a href="{% url 'auth_login' %}">Вход</a><br/><br/>
+
+{% endif %}
+{% endblock %}
