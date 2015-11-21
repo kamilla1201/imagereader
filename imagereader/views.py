@@ -16,9 +16,13 @@ def home(request):
 	return HttpResponseRedirect("/imagereader/feed/?url=all")
 
 def profile(request):
+	if not request.user.is_authenticated():
+		return HttpResponseRedirect("/imagereader/login/")
 	sources = Source.objects.filter(user=request.user)
 	return render(request, 'registration/profile.html', {'sources': sources})
 
+def redirect_account(request):
+	return HttpResponseRedirect("/imagereader/feed/?url=all")
 def add_url(request):
 	url = urlparse.unquote(request.POST['url'])
 	min_width=int(request.POST['min_width'])

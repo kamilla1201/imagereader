@@ -28,7 +28,7 @@ ALLOWED_HOSTS = []
 LOGIN_REDIRECT_URL = '/imagereader/profile/'
 ACCOUNT_ACTIVATION_DAYS = 3
 REGISTRATION_AUTO_LOGIN = True
-
+LOGIN_URL = '/imagereader/login/'
 INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
