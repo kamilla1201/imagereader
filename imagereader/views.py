@@ -73,8 +73,11 @@ def add_images(source):
 		tree = etree.XML(page)
 	except:
 		return HttpResponseRedirect("/imagereader/error/")
-	links = re.findall(r'https?://[^\s<>"]+(?:jpg|jpeg|bmp|png|gif)', page)
+	links = re.findall(r'(https?://[^\s<>"]+\.(?:jpg|jpeg|bmp|png|gif))[^.]', page)
 	for link in links:
+		existed_image = Image.objects.filter(source=url, link=link, user=source.user)
+		if existed_image:
+			continue
 		width, height = getsize(link)
 		if width is None or height is None or cmp_size(min_width, width) or cmp_size(min_height, height):
 			continue
@@ -104,7 +107,10 @@ def cmp_size(min_value, actual_value):
 
 def getsize(uri):
     # get file size *and* image size (None if not known)
-    file = urllib.urlopen(uri)
+    try:
+    	file = urllib.urlopen(uri)
+    except:
+    	return None, None
     p = ImageFile.Parser()
     width = None
     height = None

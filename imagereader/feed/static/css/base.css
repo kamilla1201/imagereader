@@ -80,8 +80,7 @@ body {
 }
 
 img {
-    max-width:640px;
-    max-height: 320px;
+    max-width: 98%;
 }
 .pagination {
     margin-bottom: 30px;
