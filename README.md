@@ -1,6 +1,8 @@
 # imagereader
 RSS images parser
 
+http://depth.cloudapp.net/imagereader/profile/
+
 # Задание
 Web сервер (приложение) на Python (Django фреймворк):
 - поддержка регистрации пользователей (по е-мейл)
