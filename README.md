@@ -1,18 +1,12 @@
 # imagereader
 RSS images parser
 
-http://depth.cloudapp.net/imagereader/profile/
-
-# Задание
-Web сервер (приложение) на Python (Django фреймворк):
-- поддержка регистрации пользователей (по е-мейл)
-- после регистрации пользователь может добавить нужные ему сайты (или RSS – выберите что легче для реализации)
-в свою “подписку”
- - когда пользователь выбрал из списка “Подписки” один из своих сайтов, то в “ленте” отображаются последние картинки/фото  из публикаций c сайт начиная с сегодняшних и отматывая назад до момента когда сайт был добавлен в подписку.
-  
-Таким образом Python код будет
-- формировать отдаваемую с сервера пользователю страницу,
-- работать с данными в БД (регистрация и сохраненные url для картинок)
-- по расписанию (раз в день например) обходить сайты из Подписки для сохранения в БД новых опубликованных картинок
-(только ссылок на них для экономии ресурсов)
- 
+# Task description:
+- support of user registration (by e-mail)
+- after registration, the user can add the sites he needs (or RSS - choose what is easier to implement) into his “subscription”
+ - when a user selects one of his sites from the “Subscriptions” list, the latest pictures / photos from publications are displayed in the “feed” starting from the current ones and winding back to the moment when the site was added to the subscription.
+  
+Thus, Python code will be
+- generate a page returned from the server to the user,
+- work with data in the database (registration and saved url for images)
+- according to the schedule (once a day for example), bypass the sites from the Subscription to save new published pictures in the database (only links)
